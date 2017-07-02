@@ -42,6 +42,7 @@ export default class AppContainer extends React.Component {
   }
 
   render() {
+    console.disableYellowBox = true;
     if (this.state.appIsReady) {
       return (
         <Provider

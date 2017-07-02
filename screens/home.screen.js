@@ -35,7 +35,8 @@ export default class HomeScreen extends React.Component {
         >
           <CollectionList
             dataSource={this.props.homeStore.collectionsDataSource}
-            handleCollectionListItemPress={this._handleCollectionListItemPress.bind(this)}
+            handleCollectionListItemTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
+            handleCollectionListItemUserPress={this._handleCollectionListItemUserPress.bind(this)}
           />
         </Display>
       </View>
@@ -56,15 +57,18 @@ export default class HomeScreen extends React.Component {
     this.props.homeStore.getCollections()
   }
 
-  _handleCollectionListItemPress (collection) {
-    alert(collection.name)
+  _handleCollectionListItemTitlePress (collection) {
+    this.props.navigation.navigate('CollectionDetails', {collection: collection})
+  }
+
+  _handleCollectionListItemUserPress (user) {
+    alert(user.username)
   }
 }
 
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    paddingBottom: 50,
+    backgroundColor: Colors.whiteColor,
   },
 });

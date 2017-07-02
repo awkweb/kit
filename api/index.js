@@ -9,14 +9,20 @@ function fetch (endpoint) {
 }
 
 export default {
-	search (query) {
-	  return fetch(`search/collections?query=${query}`)
-	},
 	collection (ownerUsername, collectionUrlKey) {
 		return fetch(`collections?ownerUsername=${ownerUsername}&collectionUrlKey=${collectionUrlKey}`)
 	},
+	collectionLikes (collectionIds) {
+		return fetch(`collection_like_counts?collectionId=${collectionIds.join()}`)
+	},
+	collectionTopics (collectionId) {
+		return fetch(`collections/${collectionId}/topics`)
+	},
 	recommendations (collectionId) {
 		return fetch(`recommendations?collectionId=${collectionId}&versionRequest=false`)
+	},
+	search (query) {
+	  return fetch(`search/collections?query=${query}`)
 	},
 	topics (topicId) {
 		let endpoint

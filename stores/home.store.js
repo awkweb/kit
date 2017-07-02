@@ -9,13 +9,13 @@ const MAX_RESULTS = 15
 
 export default class HomeStore {
   constructor() {
-    this.activeTopicId = 'trending'
+    this.activeTopicId = 'for-you'
   }
 
   @observable activeTopicId = undefined
   @observable topics = [
-    { id: 'for-you', name: 'For You', active: false },
-    { id: 'trending', name: 'Trending', active: true },
+    { id: 'for-you', name: 'For You', active: true },
+    { id: 'trending', name: 'Trending', active: false },
     { id: 'new', name: 'New', active: false },
     { id: 'staff', name: 'Staff Picks', active: false },
     { id: '3', name: '#burningman', active: false },
@@ -67,29 +67,57 @@ export default class HomeStore {
   		.then(res => {
         const collections = res.data
         let collectionsLookup = {}
-        collections.forEach(c => collectionsLookup[`${c.id}`] = c )
-
-        const maxCollections = Math.min(collections.length, MAX_RESULTS)
-        const promises = collections.slice(0, maxCollections).map(collection => api.recommendations(collection.id))
-        axios.all(promises)
+        collections.forEach(c => collectionsLookup[`${c.id}`] = c)
+        const collectionIds = Object.keys(collectionsLookup)
+        api.collectionLikes(collectionIds)
           .then(res2 => {
-            this.collections = res2.map(x => {
-              const recommendations = x.data
-              const collectionId = recommendations[0].collection.id
-              let collection = collectionsLookup[collectionId]
-              collection.recommendations = recommendations
-              return collection
-            })
-            this.loading = false
-          })
-          .catch(err2 => {
+            const collectionLikes = res2.data
+            const maxCollections = Math.min(collections.length, MAX_RESULTS)
+            const topicPromises = collectionIds.map(collectionId => api.collectionTopics(collectionId))
+            axios.all(topicPromises)
+              .then(res3 => {
+                let collectionTopicsLookup = {}
+                res3.forEach((t, i) => {
+                  const topics = t.data
+                  if (topics.length > 0) {
+                    collectionTopicsLookup[`${collectionIds[i]}`] = topics
+                  }
+                })
+                const recommendationPromises = collectionIds.map(collectionId => api.recommendations(collectionId))
+                axios.all(recommendationPromises)
+                  .then(res4 => {
+                    this.collections = res4.map(x => {
+                      const recommendations = x.data
+                      const collectionId = recommendations[0].collection.id
+                      let collection = collectionsLookup[collectionId]
+                      collection = {
+                        ...collection,
+                        recommendations: recommendations,
+                        likes: collectionLikes[collectionId],
+                        topics: collectionTopicsLookup[collectionId],
+                      }
+                      return collection
+                    })
+                    this.loading = false
+                  })
+                  .catch(err4 => {
+                    console.log(err4)
+                    this.loading = false
+                  })
+              })
+              .catch(err3 => {
+                console.log(err3)
+                this.loading = false
+              })
+      		})
+      		.catch(err2 => {
             console.log(err2)
             this.loading = false
           })
-  		})
-  		.catch(err => {
+        })
+      .catch(err => {
         console.log(err)
         this.loading = false
-      })
+      })     
   }
 }

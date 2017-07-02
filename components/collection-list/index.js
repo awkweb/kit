@@ -5,6 +5,10 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 import CollectionListItem from './collection-list-item';
 
 export default class CollectionList extends React.Component {
+  componentWillReceiveProps (nextProps) {
+    this.listView.scrollTo({x: 0, y: 0, animated: false})
+  }
+
   render () {
     return (
       <ListView
@@ -24,21 +28,29 @@ export default class CollectionList extends React.Component {
         collection={rowData}
         description={rowData.description}
         name={rowData.name}
+        likes={rowData.likes}
         recommendations={rowData.recommendations}
+        topics={rowData.topics}
         user={rowData.owner}
-        handleOnPress={this._handleOnPress.bind(this)}
+        handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
+        handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
       />
     )
   }
 
-  _handleOnPress (collection) {
-    this.props.handleCollectionListItemPress(collection)
+  _handleCollectionListItemTitlePress (collection) {
+    this.props.handleCollectionListItemTitlePress(collection)
+  }
+
+  _handleCollectionListItemUserPress (user) {
+    this.props.handleCollectionListItemUserPress(user)
   }
 }
 
 const styles = EStyleSheet.create({
   collectionList: {
     width: '100%',
+    height: '100% - 104',
   },
 });
 

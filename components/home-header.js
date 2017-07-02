@@ -106,10 +106,11 @@ const styles = StyleSheet.create({
   topicRowText: {
     color: Colors.headerTextColor,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '400',
   },
   topicRowTextActive: {
     color: Colors.headerTextColorActive,
+    fontWeight: '500',
   },
 });
 

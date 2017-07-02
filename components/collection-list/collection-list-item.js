@@ -6,44 +6,45 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import FadeIn from '@expo/react-native-fade-in-image';
-import { FontAwesome } from '@expo/vector-icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Colors from '../../constants/colors';
 import { getImageUri } from '../../utils';
 import UserAvatar from '../user-avatar';
+import ExpertBadge from '../expert-badge';
 
-const MIN_GRID_CELLS = 5;
+const MIN_GRID_CELLS = 6;
 
 export default class CollectionListItem extends React.Component {
   constructor (props) {
     super()
-    const productCount = props.recommendations.length
-    const gridCellCount = Math.min(productCount, MIN_GRID_CELLS)
-    const products = props.recommendations.slice(0, gridCellCount)
+    const recommendationCount = props.recommendations.length
+    const gridCellCount = Math.min(recommendationCount, MIN_GRID_CELLS)
+    const recommendations = props.recommendations.slice(0, gridCellCount)
     const dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
     this.state = {
       recommendations: props.recommendations,
-      dataSource: dataSource.cloneWithRows(products),
-      productCount: productCount,
+      dataSource: dataSource.cloneWithRows(recommendations),
+      recommendationCount: recommendationCount,
       gridCellCount: gridCellCount
     }
   }
 
   componentWillReceiveProps (nextProps) {
     if (this.state.recommendations != nextProps.recommendations) {
-      const productCount = nextProps.recommendations.length
-      const gridCellCount = Math.min(productCount, MIN_GRID_CELLS)
-      const products = nextProps.recommendations.slice(0, gridCellCount)
+      const recommendationCount = nextProps.recommendations.length
+      const gridCellCount = Math.min(recommendationCount, MIN_GRID_CELLS)
+      const recommendations = nextProps.recommendations.slice(0, gridCellCount)
       const dataSource = new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
       })
       this.setState({
-        dataSource: dataSource.cloneWithRows(products),
-        productCount: productCount,
+        dataSource: dataSource.cloneWithRows(recommendations),
+        recommendationCount: recommendationCount,
         gridCellCount: gridCellCount
       })
     }
@@ -57,10 +58,19 @@ export default class CollectionListItem extends React.Component {
         style={styles.collectionListItem}
       >
         <TouchableOpacity
-          onPress={this._handleOnPress}
+          activeOpacity={.85}
+          onPress={this._handleTitlePress}
           style={styles.collectionListItemHeader}
         >
           <Text style={styles.collectionListItemTitle}>{this.props.name}</Text>
+          <View style={styles.collectionLikeCount}>
+            <Ionicons
+              name={"ios-heart"}
+              size={18}
+              color={Colors.grayColor}
+            />
+            <Text style={styles.collectionLikeCountText}>{this.props.likes}</Text>
+          </View>
         </TouchableOpacity>
 
         <ListView
@@ -68,87 +78,87 @@ export default class CollectionListItem extends React.Component {
           enableEmptySections={true}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          style={styles.productGrid}
+          style={styles.recommendationGrid}
           renderRow={this._renderRow}
         />
 
         <View
           style={styles.collectionListItemDetails}
         >
-          <View style={styles.collectionListItemDetailsSection}>
-            <UserAvatar
-              user={this.props.user}
-              avatarSize={32}
-            />
-            <Text style={styles.userHandle}>@{this.props.user.username}</Text>
-          </View>
-
-          {this.props.user.showcaseInfo.authorityBadge ? this._renderExpertBadge() : this._renderTopics()}
+          <TouchableOpacity
+            activeOpacity={.85}
+            onPress={this._handleUserPress}
+          >
+            <View style={styles.collectionListItemDetailsSection}>
+              <UserAvatar
+                user={this.props.user}
+                avatarSize={32}
+              />
+              {this.props.user.showcaseInfo.authorityBadge ? <ExpertBadge description={this.props.user.showcaseInfo.authorityBadge} /> : null}
+            </View>
+          </TouchableOpacity>
+          {this.props.topics && this.props.topics.length > 0 ? this._renderTopics() : null}
         </View>
       </View>
     );
   }
 
-  _handleOnPress = () => {
-    this.props.handleOnPress(this.props.collection)
+  _handleTitlePress = () => {
+    this.props.handleTitlePress(this.props.collection)
+  }
+
+  _handleUserPress = () => {
+    this.props.handleUserPress(this.props.user)
   }
 
   _renderRow = (row, sectionID, rowID) => {
     const imageUri = getImageUri(row.media.url)
     const index = parseInt(rowID) + 1
     return (
-      <View
-        style={[styles.productGridCell, {borderLeftWidth: index == 1 ? EStyleSheet.hairlineWidth : 0}]}
-      >
-        <FadeIn
-          placeholderStyle={styles.productGridCellImageFadeIn}
-        >
-          <Image
-            style={styles.productGridCellImage}
-            source={{uri: imageUri}}
-          />
-        </FadeIn>
-        { index == this.state.gridCellCount && this.state.productCount > MIN_GRID_CELLS ? this._renderCellNumber() : null }
-      </View>
-    )
-  }
-
-  _renderCellNumber = () => {
-    const text = this.state.productCount - this.state.gridCellCount
-    return (
-      <View
-        style={styles.productGridCellNumber}
-      >
-        <Text style={styles.productGridCellNumberText}>+{text}</Text>
-      </View>
-    )
-  }
-
-  _renderExpertBadge = () => {
-    return (
-      <View
-        style={styles.collectionListItemDetailsSection}
+      <TouchableOpacity
+        activeOpacity={.75}
+        onPress={() => this._handleTitlePress()}
       >
         <View
-          style={styles.expertBadge}
+          style={[styles.recommendation, {borderLeftWidth: index == 1 ? EStyleSheet.hairlineWidth : 0}]}
         >
-          <FontAwesome
-            name={"star"}
-            size={14}
-            color={Colors.whiteColor}
-          />
+          <FadeIn
+            placeholderStyle={styles.recommendationImageFadeIn}
+          >
+            <Image
+              style={styles.recommendationImage}
+              source={{uri: imageUri}}
+            />
+          </FadeIn>
+          { index == this.state.gridCellCount && this.state.recommendationCount > MIN_GRID_CELLS ? this._renderCellNumber() : null }
         </View>
-        <Text style={styles.expertBadgeText}>{this.props.user.showcaseInfo.authorityBadge}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 
   _renderTopics = () => {
     return (
+      <View style={styles.collectionListItemDetailsSection}>
+        {this.props.topics.slice(0, 2).map(topic =>
+          <TouchableOpacity
+            key={topic.id}
+            activeOpacity={.85}
+            style={styles.collectionTopic}
+          >
+            <Text style={styles.collectionTopicText}>#{topic.name}</Text>
+          </TouchableOpacity>
+        )}
+      </View>
+    )
+  }
+
+  _renderCellNumber = () => {
+    const text = this.state.recommendationCount - this.state.gridCellCount
+    return (
       <View
-        style={styles.collectionListItemDetailsSection}
+        style={styles.recommendationNumber}
       >
-        <Text style={styles.productCountText}>{this.state.productCount} {this.state.productCount > 1 ? 'items' : 'item'}</Text>
+        <Text style={styles.recommendationNumberText}>+{text}</Text>
       </View>
     )
   }
@@ -158,18 +168,33 @@ const styles = EStyleSheet.create({
   collectionListItem: {
     alignItems: 'flex-start',
     backgroundColor: Colors.whiteColor,
-    paddingVertical: 15,
     marginBottom: 25,
   },
   collectionListItemHeader: {
+    alignItems: 'baseline',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     paddingHorizontal: 10,
+    paddingVertical: 10,
     width: '100%',
   },
   collectionListItemTitle: {
     color: Colors.blackColor,
-    fontSize: 22,
-    fontWeight: '800',
-    marginBottom: 10,
+    flex: 9,
+    fontSize: 17,
+    fontWeight: '600',
+  },
+  collectionLikeCount: {
+    alignItems: 'center',
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  collectionLikeCountText: {
+    color: Colors.grayColor,
+    fontSize: 13,
+    fontWeight: '500',
+    marginLeft: 5,
   },
   collectionListItemDetails: {
     alignItems: 'center',
@@ -184,56 +209,30 @@ const styles = EStyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
   },
-  userHandle: {
-    color: Colors.blackColor,
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 5,
-  },
-  $EXPERT_BADGE_SIZE: 20,
-  expertBadge: {
-    alignItems: 'center',
-    backgroundColor: Colors.goldColor,
-    borderRadius: '0.5 * $EXPERT_BADGE_SIZE',
-    height: '$EXPERT_BADGE_SIZE',
-    justifyContent: 'center',
-    marginRight: 5,
-    width: '$EXPERT_BADGE_SIZE',
-  },
-  expertBadgeText: {
-    color: Colors.goldColor,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  productCountText: {
-    color: Colors.headerTextColor,
-    fontSize: 14,
-    fontWeight: '700',
-  },
-  productGrid: {
+  recommendationGrid: {
     width: '100%',
     borderColor: Colors.borderColor,
     borderTopWidth: EStyleSheet.hairlineWidth,
     borderBottomWidth: EStyleSheet.hairlineWidth,
   },
-  productGridCell: {
+  recommendation: {
     alignItems: 'center',
     borderColor: Colors.borderColor,
     borderRightWidth: EStyleSheet.hairlineWidth,
     justifyContent: 'center',
     padding: 20,
   },
-  productGridCellImageFadeIn: {
+  recommendationImageFadeIn: {
     backgroundColor: Colors.placeholderColor,
     borderRadius: 4,
   },
-  productGridCellImage: {
-    height: 100,
-    width: 100,
+  recommendationImage: {
+    height: 85,
+    width: 85,
     borderRadius: 4,
     resizeMode: 'contain',
   },
-  productGridCellNumber: {
+  recommendationNumber: {
     alignItems: 'center',
     backgroundColor: Colors.whiteColorAlpha,
     bottom: 0,
@@ -243,11 +242,25 @@ const styles = EStyleSheet.create({
     right: 0,
     top: 0,
   },
-  productGridCellNumberText: {
+  recommendationNumberText: {
     backgroundColor: 'transparent',
-    color: Colors.blackColor,
-    fontSize: 28,
+    color: Colors.collectionTextColor,
+    fontSize: 25,
     fontWeight: '500',
+  },
+  collectionTopic: {
+    backgroundColor: Colors.topicBackgroundColor,
+    borderColor: '#e8e8e8',
+    borderRadius: 4,
+    borderWidth: EStyleSheet.hairlineWidth,
+    marginLeft: 5,
+    paddingHorizontal: 4,
+    paddingVertical: 3,
+  },
+  collectionTopicText: {
+    color: Colors.topicTextColor,
+    fontSize: 12,
+    fontWeight: '400',
   },
 });
 
