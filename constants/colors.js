@@ -16,7 +16,7 @@ export default {
   headerBorder: grayColor,
   headerTextColor: '#7d888f',
   headerTextColorActive: tintColor,
-  placeholderColor: topicBackgroundColor,
+  placeholderColor: '#f2f2f2',
   primaryColor: redColor,
   tabBar: whiteColor,
   tabBarBorder: grayColor,

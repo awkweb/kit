@@ -16,7 +16,8 @@ export default class RecommendationList extends React.Component {
       <ListView
         dataSource={this.props.dataSource}
         enableEmptySections={true}
-        ref={(listView) => this.listView = listView}
+        initialListSize={5}
+        removeClippedSubviews={false}
         renderHeader={this._renderHeader}
         renderRow={this._renderRow}
         style={styles.recommendationList}

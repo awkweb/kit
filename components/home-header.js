@@ -12,11 +12,6 @@ import Colors from '../constants/colors';
 import Logo from './logo';
 
 export default class HomeHeader extends React.Component {
-  constructor (props) {
-    super(props)
-
-  }
-
   render () {
     return (
       <Animated.View

@@ -21,8 +21,11 @@ export default {
 	recommendations (collectionId) {
 		return fetch(`recommendations?collectionId=${collectionId}&versionRequest=false`)
 	},
-	search (query) {
+	searchCollections (query) {
 	  return fetch(`search/collections?query=${query}`)
+	},
+	searchUsers (query) {
+	  return fetch(`search/users?query=${query}`)
 	},
 	topics (topicId) {
 		let endpoint
@@ -43,5 +46,8 @@ export default {
 				endpoint = `topics/${topicId}/trending_collections`
 		}
 		return fetch(endpoint)
+	},
+	userCollections (userId) {
+	  return fetch(`users/${userId}/collections`)
 	},
 }

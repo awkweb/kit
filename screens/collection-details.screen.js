@@ -13,12 +13,13 @@ import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header
 import * as Animatable from 'react-native-animatable';
 
 import Colors from '../constants/colors';
+import Sizes from '../constants/sizes';
 import { getImageUri } from '../utils';
 import RecommendationList from '../components/recommendation-list';
 import UserAvatar from '../components/user-avatar';
 
 const HEADER_MAX_HEIGHT = 250;
-const HEADER_MIN_HEIGHT = 64;
+const HEADER_MIN_HEIGHT = Sizes.headerBarHeight;
 
 export default class CollectionDetails extends React.Component {
   static navigationOptions = {
@@ -56,7 +57,7 @@ export default class CollectionDetails extends React.Component {
           minHeight={HEADER_MIN_HEIGHT}
           maxOverlayOpacity={0.7}
           minOverlayOpacity={0.45}
-          fadeOutForeground
+          fadeOutForeground={true}
           renderHeader={() => this._renderHeader()}
           renderFixedForeground={() => this._renderFixedForeground()}
           renderForeground={() => this._renderForeground()}
@@ -98,7 +99,7 @@ export default class CollectionDetails extends React.Component {
   }
 
   _handleUserPress = () => {
-    alert(this.state.user.username)
+    this.props.navigation.navigate('UserDetails', {user: this.state.user})
   }
 
   _renderHeader () {
@@ -117,7 +118,7 @@ export default class CollectionDetails extends React.Component {
         ref={(navTitleView) => { this.navTitleView = navTitleView; }}
       >
         <Text style={styles.fixedForegroundTitle}>{this.state.navTitle}</Text>
-        <Text style={styles.fixedForegroundUsername}>@{this.state.user.username}</Text>
+        <Text style={styles.fixedForegroundUsername}>{this.state.itemCount} {this.state.itemCount > 1 ? 'items' : 'item'}</Text>
 
         <TouchableOpacity
           activeOpacity={.85}
@@ -188,7 +189,7 @@ const styles = EStyleSheet.create({
   },
   fixedForegroundUsername: {
     color: Colors.whiteColor,
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: '400',
     backgroundColor: 'transparent',
   },
@@ -205,13 +206,6 @@ const styles = EStyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 15,
     paddingVertical: 15,
-  },
-  foregroundItems: {
-    color: Colors.whiteColor,
-    fontSize: 14,
-    fontWeight: '500',
-    backgroundColor: 'transparent',
-    marginBottom: 5,
   },
   foregroundTitle: {
     color: Colors.whiteColor,

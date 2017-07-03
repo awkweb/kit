@@ -21,9 +21,14 @@ export default class AppContainer extends React.Component {
   }
 
   async _loadAssetsAsync() {
+    this.setState({ appIsReady: true });
+    return
     try {
       await cacheAssetsAsync({
-        images: [require('./assets/images/avatar.png')],
+        images: [
+          require('./assets/images/avatar.png'),
+          require('./assets/images/cover.jpg'),
+        ],
         fonts: [
           { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
         ],

@@ -13,7 +13,7 @@ export default class ExpertBadge extends React.Component {
   render () {
     return (
       <View
-        style={styles.container}
+        style={[styles.container, this.props.style]}
       >
         <View
           style={styles.expertBadge}
@@ -24,7 +24,7 @@ export default class ExpertBadge extends React.Component {
             color={Colors.whiteColor}
           />
         </View>
-        <Text style={styles.expertBadgeText}>{this.props.description}</Text>
+        {this.props.description ? <Text style={styles.expertBadgeText}>{this.props.description}</Text> : null}
       </View>
     )
   }
@@ -43,13 +43,13 @@ const styles = EStyleSheet.create({
     borderRadius: '0.5 * $EXPERT_BADGE_SIZE',
     height: '$EXPERT_BADGE_SIZE',
     justifyContent: 'center',
-    marginRight: 5,
     width: '$EXPERT_BADGE_SIZE',
   },
   expertBadgeText: {
     color: Colors.goldColor,
     fontSize: 13,
     fontWeight: '700',
+    marginLeft: 5,
   },
 });
 

@@ -1,4 +1,3 @@
-import Expo from 'expo';
 import React from 'react';
 import { Image } from 'react-native';
 import FadeIn from '@expo/react-native-fade-in-image';
