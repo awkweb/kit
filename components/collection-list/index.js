@@ -14,7 +14,7 @@ export default class CollectionList extends React.Component {
       <ListView
         dataSource={this.props.dataSource}
         enableEmptySections={true}
-        initialListSize={this.props.dataSource.length}
+        initialListSize={this.props.dataSource.length / 2}
         ref={(listView) => this.listView = listView}
         renderRow={this._renderRow}
         style={styles.collectionList}

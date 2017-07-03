@@ -41,6 +41,7 @@ export default class CollectionDetails extends React.Component {
       user: collection.owner,
       itemCount: products.length,
       description: collection.description,
+      topics: collection.topics,
     }
   }
 
@@ -68,7 +69,9 @@ export default class CollectionDetails extends React.Component {
             >
               <RecommendationList
                 dataSource={this.state.dataSource}
+                user={this.state.user}
                 description={this.state.description}
+                topics={this.state.topics}
               />
             </TriggeringView>
           </View>

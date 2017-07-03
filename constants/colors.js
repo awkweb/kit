@@ -4,6 +4,7 @@ const grayColor = '#99A3A8';
 const goldColor = '#F6A623';
 const borderColor = '#dddddd';
 const topicBackgroundColor = '#f8f8f8';
+const redColor = '#e55e7c';
 
 export default {
   blackColor: '#000',
@@ -16,6 +17,7 @@ export default {
   headerTextColor: '#7d888f',
   headerTextColorActive: tintColor,
   placeholderColor: topicBackgroundColor,
+  primaryColor: redColor,
   tabBar: whiteColor,
   tabBarBorder: grayColor,
   tabIconDefault: grayColor,

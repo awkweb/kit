@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ListView,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -16,7 +17,6 @@ export default class RecommendationList extends React.Component {
         dataSource={this.props.dataSource}
         enableEmptySections={true}
         ref={(listView) => this.listView = listView}
-        renderFooter={this._renderFooter}
         renderHeader={this._renderHeader}
         renderRow={this._renderRow}
         style={styles.recommendationList}
@@ -43,7 +43,11 @@ export default class RecommendationList extends React.Component {
         <View
           style={styles.recommendationListHeader}
         >
-          <Text style={styles.recommendationListHeaderText}>{this.props.description}</Text>
+          <Text>
+            <Text style={styles.recommendationListHeaderTextUser}>@{this.props.user.username} says: </Text>
+            <Text style={styles.recommendationListHeaderTextDescription}>{this.props.description}</Text>
+          </Text>
+          {this.props.topics && this.props.topics.length > 0 ? this._renderTopics() : null}
         </View>
       )
     }
@@ -52,8 +56,10 @@ export default class RecommendationList extends React.Component {
 
   _renderTopics = () => {
     return (
-      <View style={styles.collectionListItemDetailsSection}>
-        {this.props.topics.slice(0, 2).map(topic =>
+      <View
+        style={styles.collectionTopicContainer}
+      >
+        {this.props.topics.map(topic =>
           <TouchableOpacity
             key={topic.id}
             activeOpacity={.85}
@@ -62,13 +68,6 @@ export default class RecommendationList extends React.Component {
             <Text style={styles.collectionTopicText}>#{topic.name}</Text>
           </TouchableOpacity>
         )}
-      </View>
-    )
-  }
-
-  _renderFooter () {
-    return (
-      <View style={styles.recommendationListFooter}>
       </View>
     )
   }
@@ -81,19 +80,36 @@ const styles = EStyleSheet.create({
   },
   recommendationListHeader: {
     backgroundColor: Colors.whiteColor,
-    borderColor: Colors.grayColor,
-    borderBottomWidth: EStyleSheet.hairlineWidth,
-    width: '100%',
-  },
-  recommendationListHeaderText: {
     paddingHorizontal: 10,
-    paddingVertical: 25,
-    fontSize: 16,
-  },
-  recommendationListFooter: {
-    backgroundColor: Colors.whiteColor,
-    height: 10,
+    paddingVertical: 15,
     width: '100%',
+  },
+  recommendationListHeaderTextUser: {
+    color: Colors.collectionTextColor,
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  recommendationListHeaderTextDescription: {
+    color: Colors.collectionTextColor,
+    fontSize: 14,
+  },
+  collectionTopicContainer: {
+    marginTop: 10,
+    flexDirection: 'row',
+  },
+  collectionTopic: {
+    backgroundColor: Colors.topicBackgroundColor,
+    borderColor: '#e8e8e8',
+    borderRadius: 4,
+    borderWidth: EStyleSheet.hairlineWidth,
+    marginRight: 5,
+    paddingHorizontal: 4,
+    paddingVertical: 3,
+  },
+  collectionTopicText: {
+    color: Colors.topicTextColor,
+    fontSize: 12,
+    fontWeight: '400',
   },
 });
 

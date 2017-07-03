@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   ListView,
   Image,
   Text,
@@ -16,10 +17,12 @@ import UserAvatar from '../user-avatar';
 import ExpertBadge from '../expert-badge';
 
 const MIN_GRID_CELLS = 6;
+const {width} = Dimensions.get('window');
+const recommendationImageSize = (width / 3) - 40.5;
 
 export default class CollectionListItem extends React.Component {
   constructor (props) {
-    super()
+    super(props)
     const recommendationCount = props.recommendations.length
     const gridCellCount = Math.min(recommendationCount, MIN_GRID_CELLS)
     const recommendations = props.recommendations.slice(0, gridCellCount)
@@ -78,6 +81,7 @@ export default class CollectionListItem extends React.Component {
           enableEmptySections={true}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
+          pagingEnabled={true}
           style={styles.recommendationGrid}
           renderRow={this._renderRow}
         />
@@ -227,8 +231,8 @@ const styles = EStyleSheet.create({
     borderRadius: 4,
   },
   recommendationImage: {
-    height: 85,
-    width: 85,
+    height: recommendationImageSize,
+    width: recommendationImageSize,
     borderRadius: 4,
     resizeMode: 'contain',
   },

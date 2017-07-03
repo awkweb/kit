@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   Linking,
   ListView,
   Image,
@@ -9,97 +10,144 @@ import {
 } from 'react-native';
 import FadeIn from '@expo/react-native-fade-in-image';
 import EStyleSheet from 'react-native-extended-stylesheet';
-import { FontAwesome } from '@expo/vector-icons';
 
 import Colors from '../../constants/colors';
 import { getImageUri } from '../../utils';
 
+const {width} = Dimensions.get('window');
+const recommendationImageSize = (width / 2) - 20;
+
 export default class RecommendationListItem extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      descriptionMaxLength: 140,
+    }
+  }
+
   render () {
     return (
       <View
         style={styles.recommendationListItem}
       >
-        <FadeIn
-          placeholderStyle={styles.recommendationlImageFadeIn}
-        >
-          <Image
-            style={styles.recommendationlImage}
-            source={{uri: getImageUri(this.props.imageUri)}}
-          />
-        </FadeIn>
-        
         <View
-          style={styles.recommendationListItemDetails}
+          style={styles.recommendationListItemContainer}
         >
-          <Text style={styles.recommendationListItemTitle}>{this.props.name}</Text>
-          {this.props.description ? <Text style={styles.recommendationListItemDescription}>{this.props.description}</Text> : null}
-        </View>
+          <FadeIn
+            placeholderStyle={styles.recommendationImageFadeIn}
+          >
+            <Image
+              style={styles.recommendationImage}
+              source={{uri: getImageUri(this.props.imageUri)}}
+            />
+          </FadeIn>
+          
+          <View
+            style={styles.recommendationListItemDetails}
+          >
+            <Text style={styles.recommendationListItemTitle}>{this.props.name}</Text>
+            {this.props.description ? this._renderDescription() : null}
 
-        <TouchableHighlight
-          style={styles.buyButton}
-          onPress={this._handlePress}
-        >
-          <FontAwesome
-            name={"shopping-cart"}
-            size={22}
-            color={Colors.whiteColor}
-          />
-        </TouchableHighlight>
+            <TouchableHighlight
+              activeOpacity={.85}
+              style={styles.getItButton}
+              onPress={this._handleBuyButtonPress}
+            >
+              <Text style={styles.getItButtonText}>Get it on {this.props.retailerName}</Text>
+            </TouchableHighlight>
+          </View>
+      </View>
       </View>
     );
   }
 
-  _handlePress = () => {
+  _renderDescription = () => {
+    const description = this.props.description.length > this.state.descriptionMaxLength ?
+      `${this.props.description.slice(0, this.state.descriptionMaxLength)}... ` : this.props.description
+    return (
+      <Text
+         style={styles.recommendationListItemDescriptionContainer}
+      >
+        <Text style={styles.recommendationListItemDescription}>{description}</Text>
+        {this.props.description.length > this.state.descriptionMaxLength ?
+          <Text
+            activeOpacity={.85}
+            style={styles.recommendationListItemDescriptionMore}
+            onPress={this._handleDescriptionPress}
+          >
+            Read more
+          </Text> : null}
+      </Text>
+    )
+  }
+
+  _handleBuyButtonPress = () => {
     Linking.openURL(this.props.url)
+  }
+
+  _handleDescriptionPress = () => {
+    this.setState({descriptionMaxLength: this.props.description.length + 1})
   }
 }
 
 const styles = EStyleSheet.create({
   recommendationListItem: {
     backgroundColor: Colors.whiteColor,
-    borderColor: Colors.borderColor,
-    borderBottomWidth: EStyleSheet.hairlineWidth,
-    marginTop: 10,
+    borderTopColor: Colors.borderColor,
+    borderTopWidth: EStyleSheet.hairlineWidth,
+    marginBottom: 10,
+  },
+  recommendationListItemContainer: {
+    flexDirection: 'row',
+    paddingHorizontal: 10,
     paddingVertical: 20,
   },
-  recommendationlImageFadeIn: {
-    alignSelf: 'center',
-    backgroundColor: Colors.grayColors,
+  recommendationImageFadeIn: {
+    backgroundColor: Colors.placeholderColor,
     borderRadius: 4,
   },
-  recommendationlImage: {
+  recommendationImage: {
     alignSelf: 'center',
-    height: 150,
-    width: 150,
     borderRadius: 4,
-    marginBottom: 10,
+    height: recommendationImageSize,
     resizeMode: 'contain',
+    width: recommendationImageSize,
   },
   recommendationListItemDetails: {
-    paddingHorizontal: 10,
+    flex: 1,
+    paddingLeft: 10,
   },
   recommendationListItemTitle: {
     color: Colors.blackColor,
-    fontSize: 18,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '600',
+    marginBottom: 5,
+  },
+  recommendationListItemDescriptionContainer: {
+    marginBottom: 10,
   },
   recommendationListItemDescription: {
-    color: Colors.blackColor,
-    fontSize: 16,
-    marginTop: 10,
+    color: Colors.collectionTextColor,
+    display: 'inline',
+    fontSize: 12,
+  },
+  recommendationListItemDescriptionMore: {
+    color: Colors.primaryColor,
+    fontSize: 12,
+    fontWeight: '500',
   },
   $BUY_BUTTON_SIZE: 36,
-  buyButton: {
+  getItButton: {
     alignItems: 'center',
     backgroundColor: Colors.blackColor,
-    borderRadius: 4,
-    height: '$BUY_BUTTON_SIZE',
+    borderRadius: 15,
     justifyContent: 'center',
-    position: 'absolute',
-    right: 10,
-    top: 10,
-    width: '$BUY_BUTTON_SIZE',
+    height: 30,
+  },
+  getItButtonText: {
+    color: Colors.whiteColor,
+    fontSize: 12,
+    fontWeight: '600',
   },
 });
 
