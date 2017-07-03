@@ -10,7 +10,7 @@ import { getImageUri } from '../utils';
 export default class UserAvatar extends React.Component {
   render () {
     const source = this.props.user.media && this.props.user.media.avatarImageUrl ?
-      { uri: getImageUri(this.props.user.media.avatarImageUrl) } : require('../assets/avatar.png')
+      { uri: getImageUri(this.props.user.media.avatarImageUrl) } : require('../assets/images/avatar.png')
     return (
       <FadeIn>
         <Image

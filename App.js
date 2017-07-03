@@ -1,5 +1,4 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
 import { AppLoading } from 'expo';
 import { Provider } from 'mobx-react';
 import EStyleSheet from 'react-native-extended-stylesheet';
@@ -22,10 +21,9 @@ export default class AppContainer extends React.Component {
   }
 
   async _loadAssetsAsync() {
-    this.setState({ appIsReady: true });
     try {
       await cacheAssetsAsync({
-        images: [require('./assets/images/expo-wordmark.png')],
+        images: [require('./assets/images/avatar.png')],
         fonts: [
           { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
         ],
@@ -54,7 +52,7 @@ export default class AppContainer extends React.Component {
         </Provider>
       );
     } else {
-      return <AppLoading />;
+      return <AppLoading />
     }
   }
 }

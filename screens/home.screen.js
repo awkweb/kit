@@ -1,11 +1,12 @@
 import React from 'react';
 import {
-  StyleSheet,
+  StatusBar,
   Text,
   View,
 } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import Display from 'react-native-display';
+import { PulseIndicator } from 'react-native-indicators';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Colors from '../constants/colors';
@@ -24,12 +25,16 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+        />
+
         {this._renderHomeHeader()}
-  
+    
         <Display
           enable={!this.props.homeStore.loading}
           enterDuration={250} 
-          exitDuration={250}
+          exitDuration={100}
           exit="fadeOut"
           enter="fadeIn"
         >
@@ -39,6 +44,8 @@ export default class HomeScreen extends React.Component {
             handleCollectionListItemUserPress={this._handleCollectionListItemUserPress.bind(this)}
           />
         </Display>
+
+        {this.props.homeStore.loading ? <PulseIndicator color='black' /> : null}
       </View>
     );
   }

@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import { inject, observer } from 'mobx-react';
 import { Ionicons } from '@expo/vector-icons';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';

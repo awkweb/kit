@@ -1,6 +1,6 @@
 import React from 'react';
 import { 
-  StyleSheet,
+  StatusBar,
   Text,
   View
 } from 'react-native';
@@ -17,6 +17,9 @@ export default class Search extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar
+          barStyle="dark-content"
+        />
         <Text>Search</Text>
       </View>
     );
@@ -26,6 +29,6 @@ export default class Search extends React.Component {
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.whiteColor,
   },
 });
