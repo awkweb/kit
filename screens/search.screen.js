@@ -24,9 +24,6 @@ const resultsListHeight = height - Sizes.headerBarHeight - Sizes.searchTypeConta
 
 @inject('searchStore') @observer
 export default class Search extends React.Component {
-  static navigationOptions = {
-  };
-
   constructor(props) {
     super(props)
     this.state = {
@@ -40,6 +37,7 @@ export default class Search extends React.Component {
       <View style={styles.container}>
         <StatusBar
           barStyle="dark-content"
+          animated={true}
         />
         <Animated.View
           style={styles.searchContainer}
@@ -56,7 +54,7 @@ export default class Search extends React.Component {
               autoCapitalize={'none'}
               autoCorrect={false}
               clearButtonMode={'always'}
-              onChangeText={(query) => this.setState({query})}
+              onChangeText={(query) => this._onChangeText(query)}
               onSubmitEditing={this._onSearch}
               placeholder={'Search all the kits'}
               placeholderTextColor={Colors.headerTextColor}
@@ -73,6 +71,13 @@ export default class Search extends React.Component {
     );
   }
 
+  _onChangeText = (query) => {
+    this.setState({query})
+    if (query.length == 0) {
+      this.setState({showTrending: true})
+    }
+  }
+
   _renderListView = () => {
     let markup
     if (this.props.searchStore.loading) {
@@ -86,7 +91,7 @@ export default class Search extends React.Component {
         <ListView
           dataSource={this.props.searchStore.searchResultsDataSource}
           enableEmptySections={true}
-          initialListSize={this.props.searchStore.searchResultsDataSource.length / 2}
+          initialListSize={this.activeSearchType === 'kits' ? 3 : 6}
           ref={(listView) => this.listView = listView}
           renderRow={this._renderRow}
           style={[styles.resultsList, {height: resultsListHeight}]}
@@ -110,6 +115,7 @@ export default class Search extends React.Component {
           user={rowData.owner}
           handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
           handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
+          handleTopicPress={this._handleCollectionListItemTopicPress.bind(this)}
         />
       )
     } else {
@@ -136,6 +142,10 @@ export default class Search extends React.Component {
 
   _handleCollectionListItemUserPress (user) {
     this.props.navigation.navigate('UserDetails', {user: user})
+  }
+
+  _handleCollectionListItemTopicPress (topic) {
+    this.props.navigation.navigate('TopicDetails', {topic: topic})
   }
 
   _onSearch = () => {
@@ -265,16 +275,16 @@ const styles = EStyleSheet.create({
   searchTypeText: {
     color: Colors.headerTextColor,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '500',
     backgroundColor: 'transparent',
   },
   searchTypeTextActive: {
     color: Colors.blackColor,
+    fontWeight: '600',
   },
   trendingTermsList: {
     alignItems: 'center',
-    flex: 1,
-    justifyContent: 'center',
+    marginTop: 80,
   },
   trendingTermsListTitle: {
     color: Colors.headerTextColor,

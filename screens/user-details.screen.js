@@ -1,7 +1,9 @@
 import React from 'react';
 import {
   Image,
+  Linking,
   ListView,
+  Share,
   StatusBar,
   Text,
   TouchableOpacity,
@@ -13,6 +15,7 @@ import { PulseIndicator } from 'react-native-indicators';
 import EStyleSheet from 'react-native-extended-stylesheet';
 import HeaderImageScrollView, { TriggeringView } from 'react-native-image-header-scroll-view';
 import * as Animatable from 'react-native-animatable';
+import psl from 'psl';
 
 import Colors from '../constants/colors';
 import Sizes from '../constants/sizes';
@@ -31,9 +34,6 @@ const HEADER_MIN_HEIGHT = Sizes.headerBarHeight;
 
 @observer
 export default class CollectionDetails extends React.Component {
-  static navigationOptions = {
-  };
-
   constructor (props) {
     super(props)
     const userStore = new UserStore();
@@ -57,6 +57,7 @@ export default class CollectionDetails extends React.Component {
       <View style={styles.container}>
         <StatusBar
           barStyle="light-content"
+          animated={true}
         />
           
         <HeaderImageScrollView
@@ -86,7 +87,21 @@ export default class CollectionDetails extends React.Component {
         >
           <View>
             <Ionicons
-              name={"ios-arrow-back"}
+              name={"ios-arrow-back-outline"}
+              size={32}
+              color={Colors.whiteColor}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          activeOpacity={.85}
+          onPress={this._handleShareButtonPress}
+          style={styles.shareButton}
+        >
+          <View>
+            <Ionicons
+              name={"ios-share-outline"}
               size={32}
               color={Colors.whiteColor}
             />
@@ -98,6 +113,14 @@ export default class CollectionDetails extends React.Component {
 
   _handleBackButtonPress = () => {
     this.props.navigation.goBack(null)
+  }
+
+  _handleShareButtonPress = () => {
+    const data = {
+      message: `Check out @${this.state.user.username} on Kit!`,
+      url: `https://kit.com/${this.state.user.username}`,
+    }
+    Share.share(data)
   }
 
   _renderListView = () => {
@@ -145,6 +168,7 @@ export default class CollectionDetails extends React.Component {
         user={rowData.owner}
         handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
         handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
+        handleTopicPress={this._handleCollectionListItemTopicPress.bind(this)}
       />
     )
   }
@@ -155,6 +179,10 @@ export default class CollectionDetails extends React.Component {
 
   _handleCollectionListItemUserPress (user) {
     this.props.navigation.navigate('UserDetails', {user: user})
+  }
+
+  _handleCollectionListItemTopicPress (topic) {
+    this.props.navigation.navigate('TopicDetails', {topic: topic})
   }
 
   _renderHeader () {
@@ -179,6 +207,7 @@ export default class CollectionDetails extends React.Component {
   }
 
   _renderForeground () {
+    const hasUrl = this.state.user.url || (this.state.user.userProvidedInfo && this.state.user.userProvidedInfo.url)
     return (
       <View style={styles.foregroundContainer}>
         <View
@@ -192,11 +221,36 @@ export default class CollectionDetails extends React.Component {
         </View>
         
         {this.state.userFullName.length > 0 ? <Text style={styles.foregroundTitle}>{this.state.userFullName}</Text> : null}
-        <Text style={styles.foregroundUsername}>@{this.state.user.username}</Text>
-        
+        <View
+          style={styles.userDetailsContainer}
+        >
+          <Text style={styles.foregroundUsername}>@{this.state.user.username}</Text>
+          {hasUrl ? <Text style={styles.seperator}>•</Text> : null}
+          {hasUrl ? this._renderWebLink() : null}
+        </View>
+
         {this.state.user.bio ? <Text style={styles.foregroundBio}>{this.state.user.bio}</Text> : null}
       </View>
     )
+  }
+
+  _renderWebLink = () => {
+    let url = this.state.user.url ? this.state.user.url : this.state.user.userProvidedInfo.url
+    url = url.replace(/http:\/\/|https:\/\/|www./g, '')
+    return (
+      <TouchableOpacity
+        activeOpacity={.85}
+        onPress={() => this._handleWebLinkPress(url)}
+        style={styles.foregroundWebLink}
+      >
+        <Text style={styles.foregroundWebLinkText}>{url}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  _handleWebLinkPress (url) {
+    const urlLink = url.replace(/http:\/\/|https:\/\//g, '')
+    Linking.openURL(`http://${urlLink}`)
   }
 }
 
@@ -212,6 +266,13 @@ const styles = EStyleSheet.create({
     position: 'absolute',
     top: 25,
     width: 40,
+  },
+  shareButton: {
+    backgroundColor: 'transparent',
+    right: 10,
+    position: 'absolute',
+    top: 25,
+    width: 20,
   },
   pulseIndicator: {
     marginTop: 40,
@@ -247,12 +308,6 @@ const styles = EStyleSheet.create({
     fontWeight: '400',
     backgroundColor: 'transparent',
   },
-  fixedForegroundAvatar: {
-    backgroundColor: 'transparent',
-    right: 10,
-    position: 'absolute',
-    top: 25,
-  },
   foregroundContainer: {
     alignItems: 'center',
     flex: 1,
@@ -279,12 +334,31 @@ const styles = EStyleSheet.create({
     fontSize: 20,
     fontWeight: '600',
   },
+  userDetailsContainer: {
+    flexDirection: 'row',
+    marginTop: 3,
+  },
+  seperator: {
+    backgroundColor: 'transparent',
+    color: Colors.whiteColor,
+    fontSize: 13,
+    fontWeight: '400',
+    marginHorizontal: 5,
+  },
   foregroundUsername: {
     backgroundColor: 'transparent',
     color: Colors.whiteColor,
     fontSize: 13,
     fontWeight: '400',
-    marginTop: 3,
+  },
+  foregroundWebLink: {
+    backgroundColor: 'transparent',
+    marginLeft: 3,
+  },
+  foregroundWebLinkText: {
+    color: Colors.whiteColor,
+    fontSize: 13,
+    fontWeight: '400',
   },
   foregroundBio: {
     backgroundColor: 'transparent',

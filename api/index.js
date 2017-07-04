@@ -27,7 +27,7 @@ export default {
 	searchUsers (query) {
 	  return fetch(`search/users?query=${query}`)
 	},
-	topics (topicId) {
+	topicCollections (topicId) {
 		let endpoint
 		switch (topicId) {
 			case 'for-you':

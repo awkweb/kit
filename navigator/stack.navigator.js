@@ -11,6 +11,7 @@ import HomeScreen from '../screens/home.screen';
 import SearchScreen from '../screens/search.screen';
 import CollectionDetailsScreen from '../screens/collection-details.screen';
 import UserDetailsScreen from '../screens/user-details.screen';
+import TopicDetailsScreen from '../screens/topic-details.screen';
 
 const headerStyle = {
   backgroundColor: Colors.whiteColor,
@@ -36,6 +37,10 @@ const HomeTab = StackNavigator(
       screen: UserDetailsScreen,
       path: '/user/:id',
     },
+    TopicDetails: {
+      screen: TopicDetailsScreen,
+      path: '/topic/:id',
+    },
   },
   {
     initialRouteName: 'Home',
@@ -59,6 +64,10 @@ const SearchTab = StackNavigator(
     UserDetails: {
       screen: UserDetailsScreen,
       path: '/user/:id',
+    },
+    TopicDetails: {
+      screen: TopicDetailsScreen,
+      path: '/topic/:id',
     },
   },
   {

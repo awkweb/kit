@@ -115,6 +115,10 @@ export default class CollectionListItem extends React.Component {
     this.props.handleUserPress(this.props.user)
   }
 
+  _handleTopicPress = (topic) => {
+    this.props.handleTopicPress(topic)
+  }
+
   _renderRow = (row, sectionID, rowID) => {
     const imageUri = getImageUri(row.media.url)
     const index = parseInt(rowID) + 1
@@ -148,6 +152,7 @@ export default class CollectionListItem extends React.Component {
             key={topic.id}
             activeOpacity={.85}
             style={styles.collectionTopic}
+            onPress={() => this._handleTopicPress(topic)}
           >
             <Text style={styles.collectionTopicText}>#{topic.name}</Text>
           </TouchableOpacity>

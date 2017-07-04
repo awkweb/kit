@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Image,
   ListView,
+  Share,
   StatusBar,
   Text,
   TouchableOpacity,
@@ -22,9 +23,6 @@ const HEADER_MAX_HEIGHT = 250;
 const HEADER_MIN_HEIGHT = Sizes.headerBarHeight;
 
 export default class CollectionDetails extends React.Component {
-  static navigationOptions = {
-  };
-
   constructor (props) {
     super(props)
     const collection = props.navigation.state.params.collection
@@ -47,16 +45,17 @@ export default class CollectionDetails extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={styles.container}> 
         <StatusBar
           barStyle="light-content"
-        />
-          
+          animated={true}
+        />         
         <HeaderImageScrollView
           maxHeight={HEADER_MAX_HEIGHT}
           minHeight={HEADER_MIN_HEIGHT}
           maxOverlayOpacity={0.7}
-          minOverlayOpacity={0.45}
+          minOverlayOpacity={0.35}
+          overlayColor={Colors.blackColor}
           fadeOutForeground={true}
           renderHeader={() => this._renderHeader()}
           renderFixedForeground={() => this._renderFixedForeground()}
@@ -64,8 +63,8 @@ export default class CollectionDetails extends React.Component {
         >
           <View>
             <TriggeringView
-              onBeginHidden={() => this.navTitleView.fadeInUp(300)}
-              onDisplay={() => this.navTitleView.fadeOut(100)}
+              onBeginHidden={() => this.fixedForeground.fadeInUp(300)}
+              onDisplay={() => this.fixedForeground.fadeOut(100)}
             >
               <RecommendationList
                 dataSource={this.state.dataSource}
@@ -84,7 +83,7 @@ export default class CollectionDetails extends React.Component {
         >
           <View>
             <Ionicons
-              name={"ios-arrow-back"}
+              name={"ios-arrow-back-outline"}
               size={32}
               color={Colors.whiteColor}
             />
@@ -115,7 +114,7 @@ export default class CollectionDetails extends React.Component {
     return (
       <Animatable.View
         style={styles.fixedForegroundContainer}
-        ref={(navTitleView) => { this.navTitleView = navTitleView; }}
+        ref={(fixedForeground) => {this.fixedForeground = fixedForeground}}
       >
         <Text style={styles.fixedForegroundTitle}>{this.state.navTitle}</Text>
         <Text style={styles.fixedForegroundUsername}>{this.state.itemCount} {this.state.itemCount > 1 ? 'items' : 'item'}</Text>
@@ -150,8 +149,30 @@ export default class CollectionDetails extends React.Component {
         </TouchableOpacity>
 
         <Text style={styles.foregroundUsername}>by @{this.state.user.username}</Text>
+
+        <TouchableOpacity
+          activeOpacity={.85}
+          onPress={this._handleShareButtonPress}
+          style={styles.shareButton}
+        >
+          <View>
+            <Ionicons
+              name={"ios-share-outline"}
+              size={32}
+              color={Colors.whiteColor}
+            />
+          </View>
+        </TouchableOpacity>
       </View>
     )
+  }
+
+  _handleShareButtonPress = () => {
+    const data = {
+      message: `Check out ${this.state.title} by @${this.state.user.username} on Kit!`,
+      url: `https://kit.com/${this.state.user.username}/${this.state.collection.urlKey}`,
+    }
+    Share.share(data)
   }
 }
 
@@ -210,15 +231,22 @@ const styles = EStyleSheet.create({
   foregroundTitle: {
     color: Colors.whiteColor,
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: '500',
     backgroundColor: 'transparent',
     marginBottom: 10,
   },
   foregroundUsername: {
     color: Colors.whiteColor,
-    fontSize: 16,
-    fontWeight: '500',
+    fontSize: 15,
+    fontWeight: '400',
     backgroundColor: 'transparent',
     marginTop: 5,
+  },
+  shareButton: {
+    backgroundColor: 'transparent',
+    right: 15,
+    position: 'absolute',
+    bottom: 10,
+    width: 20,
   },
 });

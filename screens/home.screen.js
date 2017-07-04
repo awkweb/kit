@@ -20,20 +20,17 @@ const collectionListHeight = height - Sizes.headerBarHeight - Sizes.tabBarHeight
 
 @inject('homeStore') @observer
 export default class HomeScreen extends React.Component {
-  static navigationOptions = {
-  };
-
   componentDidMount () {
     this.props.homeStore.getCollections()
   }
 
-  render() {
+  render () {
     return (
       <View style={styles.container}>
         <StatusBar
           barStyle="dark-content"
+          animated={true}
         />
-
         {this._renderHomeHeader()}
         {this._renderListView()}
       </View>
@@ -60,7 +57,7 @@ export default class HomeScreen extends React.Component {
         <ListView
           dataSource={this.props.homeStore.collectionsDataSource}
           enableEmptySections={true}
-          initialListSize={this.props.homeStore.collectionsDataSource.length / 2}
+          initialListSize={3}
           ref={(listView) => this.listView = listView}
           renderRow={this._renderRow}
           style={[styles.collectionList, {height: collectionListHeight}]}
@@ -82,6 +79,7 @@ export default class HomeScreen extends React.Component {
         user={rowData.owner}
         handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
         handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
+        handleTopicPress={this._handleCollectionListItemTopicPress.bind(this)}
       />
     )
   }
@@ -97,6 +95,10 @@ export default class HomeScreen extends React.Component {
 
   _handleCollectionListItemUserPress (user) {
     this.props.navigation.navigate('UserDetails', {user: user})
+  }
+
+  _handleCollectionListItemTopicPress (topic) {
+    this.props.navigation.navigate('TopicDetails', {topic: topic})
   }
 }
 

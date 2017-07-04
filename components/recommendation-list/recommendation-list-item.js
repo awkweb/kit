@@ -125,7 +125,6 @@ const styles = EStyleSheet.create({
     marginBottom: 5,
   },
   recommendationListItemDescriptionContainer: {
-    marginBottom: 10,
   },
   recommendationListItemDescription: {
     color: Colors.collectionTextColor,
@@ -143,6 +142,7 @@ const styles = EStyleSheet.create({
     borderRadius: 15,
     justifyContent: 'center',
     height: 30,
+    marginTop: 10,
   },
   getItButtonText: {
     color: Colors.whiteColor,

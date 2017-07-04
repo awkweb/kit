@@ -8,6 +8,8 @@ import cacheAssetsAsync from './utils/cache-assets-async';
 import HomeStore from './stores/home.store';
 import SearchStore from './stores/search.store';
 
+import Colors from './constants/colors';
+
 const homeStore = new HomeStore();
 const searchStore = new SearchStore();
 
@@ -27,14 +29,11 @@ export default class AppContainer extends React.Component {
           require('./assets/images/avatar.png'),
           require('./assets/images/cover.jpg'),
         ],
-        fonts: [
-          { 'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf') },
-        ],
       });
     } catch (e) {
       console.warn(
-        'There was an error caching assets (see: App.js), perhaps due to a ' +
-          'network timeout, so we skipped caching. Reload the app to try again.'
+        `There was an error caching assets (see: App.js), perhaps due to a
+        network timeout, so we skipped caching. Reload the app to try again.`
       );
       console.log(e.message);
     } finally {
@@ -64,6 +63,6 @@ EStyleSheet.build();
 const styles = EStyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.whiteColor,
   },
 });

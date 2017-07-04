@@ -18,10 +18,10 @@ export default class SearchStore {
     people: { name: 'people', active: false, results: [] },
   }
   @observable trendingTerms = [
-    { id: 1, name: 'sushi' },
+    { id: 1, name: 'books in 2017' },
     { id: 2, name: 'camera gear' },
     { id: 3, name: 'travel' },
-    { id: 4, name: 'festival' },
+    { id: 4, name: 'summer' },
     { id: 5, name: 'tea' },
   ]
   @observable loading = false
@@ -53,7 +53,6 @@ export default class SearchStore {
 
         const collections = collectionRes.data.hits.hits
         if (collections.length == 0) {
-          this.activeSearchType = 'people'
           this.searchTypes.kits.results = []
           this.loading = false    
           return

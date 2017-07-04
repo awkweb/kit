@@ -1,14 +1,11 @@
 {
   "expo": {
-    "name": "kit",
+    "name": "Kit β",
     "description": "So kitted bro",
     "slug": "kit",
     "privacy": "public",
     "sdkVersion": "18.0.0",
-    "ios": {
-      "bundleIdentifier": "co.meagher.kit"
-    },
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "primaryColor": "#fff",
     "icon": "./assets/icons/app-icon.png",
@@ -16,10 +13,8 @@
       "icon": "./assets/icons/loading-icon.png",
       "hideExponentText": true
     },
-    "packagerOpts": {
-      "assetExts": ["ttf"]
-    },
     "ios": {
+      "bundleIdentifier": "co.meagher.kit",
       "supportsTablet": false
     }
   }

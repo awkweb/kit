@@ -40,12 +40,13 @@ export default class RecommendationList extends React.Component {
   _renderHeader = () => {
     let markup
     if (this.props.description) {
+      const headerTextUser = this.props.user.firstname ? this.props.user.firstname : `@${this.props.user.username}`
       markup = (
         <View
           style={styles.recommendationListHeader}
         >
           <Text>
-            <Text style={styles.recommendationListHeaderTextUser}>@{this.props.user.username} says: </Text>
+            <Text style={styles.recommendationListHeaderTextUser}>{headerTextUser} says: </Text>
             <Text style={styles.recommendationListHeaderTextDescription}>{this.props.description}</Text>
           </Text>
           {this.props.topics && this.props.topics.length > 0 ? this._renderTopics() : null}

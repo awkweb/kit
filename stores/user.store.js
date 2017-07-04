@@ -49,19 +49,22 @@ export default class UserStore {
                 const recommendationPromises = collectionIds.map(collectionId => api.recommendations(collectionId))
                 axios.all(recommendationPromises)
                   .then(res4 => {
-                    this.collections = res4.map(x => {
+                    let collectionResults = []
+                    res4.forEach(x => {
                       const recommendations = x.data
-                      const collectionId = recommendations[0].collection.id
-                      let collection = collectionsLookup[collectionId]
-                      collection = {
-                        ...collection,
-                        recommendations: recommendations,
-                        likes: collectionLikes[collectionId],
-                        topics: collectionTopicsLookup[collectionId],
+                      if (recommendations.length > 0) {
+                        const collectionId = recommendations[0].collection.id
+                        let collection = collectionsLookup[collectionId]
+                        collection = {
+                          ...collection,
+                          recommendations: recommendations,
+                          likes: collectionLikes[collectionId],
+                          topics: collectionTopicsLookup[collectionId],
+                        }
+                        collectionResults.push(collection)
                       }
-                      console.log(collection.name)
-                      return collection
                     })
+                    this.collections = collectionResults
                     this.loading = false
                   })
                   .catch(err4 => {
