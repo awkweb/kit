@@ -36,7 +36,7 @@ export default class UserStore {
         api.collectionLikes(collectionIds)
           .then(res2 => {
             const collectionLikes = res2.data
-            const topicPromises = collectionIds.slice(0, maxCollections).map(collectionId => api.collectionTopics(collectionId))
+            const topicPromises = collectionIds.map(collectionId => api.collectionTopics(collectionId))
             axios.all(topicPromises)
               .then(res3 => {
                 let collectionTopicsLookup = {}
@@ -59,6 +59,7 @@ export default class UserStore {
                         likes: collectionLikes[collectionId],
                         topics: collectionTopicsLookup[collectionId],
                       }
+                      console.log(collection.name)
                       return collection
                     })
                     this.loading = false

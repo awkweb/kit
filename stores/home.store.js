@@ -9,13 +9,13 @@ const MAX_RESULTS = 20
 
 export default class HomeStore {
   constructor() {
-    this.activeTopicId = 'for-you'
+    this.activeTopicId = 'trending'
   }
 
   @observable activeTopicId = undefined
   @observable topics = [
-    { id: 'for-you', name: 'For You', active: true },
-    { id: 'trending', name: 'Trending', active: false },
+    { id: 'for-you', name: 'For You', active: false },
+    { id: 'trending', name: 'Trending', active: true },
     { id: 'new', name: 'New', active: false },
     { id: 'staff', name: 'Staff Picks', active: false },
     { id: '3', name: '#burningman', active: false },

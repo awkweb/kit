@@ -5,6 +5,9 @@
     "slug": "kit",
     "privacy": "public",
     "sdkVersion": "18.0.0",
+    "ios": {
+      "bundleIdentifier": "co.meagher.kit"
+    },
     "version": "1.0.0",
     "orientation": "portrait",
     "primaryColor": "#fff",

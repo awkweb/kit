@@ -26,6 +26,7 @@ export default class RecommendationListItem extends React.Component {
   }
 
   render () {
+    const retailerName = this.props.retailerName.length > 10 ? `${this.props.retailerName.slice(0, 10)}...` : this.props.retailerName
     return (
       <View
         style={styles.recommendationListItem}
@@ -53,7 +54,7 @@ export default class RecommendationListItem extends React.Component {
               style={styles.getItButton}
               onPress={this._handleBuyButtonPress}
             >
-              <Text style={styles.getItButtonText}>Get it on {this.props.retailerName}</Text>
+              <Text style={styles.getItButtonText}>Get it on {retailerName}</Text>
             </TouchableHighlight>
           </View>
       </View>
@@ -128,7 +129,6 @@ const styles = EStyleSheet.create({
   },
   recommendationListItemDescription: {
     color: Colors.collectionTextColor,
-    display: 'inline',
     fontSize: 12,
   },
   recommendationListItemDescriptionMore: {

@@ -40,7 +40,8 @@ export default class CollectionDetails extends React.Component {
     const user = props.navigation.state.params.user
     userStore.setUser(user)
     const coverImageSource = user.media.coverImageUrl ? {uri: getImageUri(user.media.coverImageUrl)} : require('../assets/images/cover.jpg')
-    this.state = {userStore, coverImageSource, user}
+    const userFullName = getUserFullName(user)
+    this.state = {userStore, coverImageSource, user, userFullName}
   }
 
   componentDidMount () {
@@ -108,8 +109,8 @@ export default class CollectionDetails extends React.Component {
           style={styles.pulseIndicator}
         />
       )
-    } else if (this.state.userStore.collections.length == 0) {
-      const description = `@${this.state.user.username} hasn't created any kits.`
+    } else if (this.state.userStore.collections.length == 0 && !this.state.userStore.loading) {
+      const description = `@${this.state.user.username} hasn't created any kits yet.`
       markup = (
         <EmptyState
           title={'No kits :('}
@@ -166,13 +167,12 @@ export default class CollectionDetails extends React.Component {
   }
 
   _renderFixedForeground () {
-    const userFullName = getUserFullName(this.state.user)
     return (
       <Animatable.View
         style={styles.fixedForegroundContainer}
         ref={(navTitleView) => { this.navTitleView = navTitleView; }}
       >
-        {userFullName.length > 0 ? <Text style={styles.fixedForegroundTitle}>{userFullName}</Text> : null}
+        {this.state.userFullName.length > 0 ? <Text style={styles.fixedForegroundTitle}>{this.state.userFullName}</Text> : null}
         <Text style={styles.fixedForegroundUsername}>@{this.state.user.username}</Text>
       </Animatable.View>
     )
@@ -191,7 +191,7 @@ export default class CollectionDetails extends React.Component {
           {this.state.user.showcaseInfo.authorityBadge ? <ExpertBadge style={styles.expertBadge} /> : null}
         </View>
         
-        <Text style={styles.foregroundTitle}>{`${this.state.user.firstname} ${this.state.user.lastname}`}</Text>
+        {this.state.userFullName.length > 0 ? <Text style={styles.foregroundTitle}>{this.state.userFullName}</Text> : null}
         <Text style={styles.foregroundUsername}>@{this.state.user.username}</Text>
         
         {this.state.user.bio ? <Text style={styles.foregroundBio}>{this.state.user.bio}</Text> : null}
@@ -278,13 +278,13 @@ const styles = EStyleSheet.create({
     color: Colors.whiteColor,
     fontSize: 20,
     fontWeight: '600',
-    marginBottom: 3,
   },
   foregroundUsername: {
     backgroundColor: 'transparent',
     color: Colors.whiteColor,
     fontSize: 13,
     fontWeight: '400',
+    marginTop: 3,
   },
   foregroundBio: {
     backgroundColor: 'transparent',

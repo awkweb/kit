@@ -21,8 +21,6 @@ export default class AppContainer extends React.Component {
   }
 
   async _loadAssetsAsync() {
-    this.setState({ appIsReady: true });
-    return
     try {
       await cacheAssetsAsync({
         images: [
