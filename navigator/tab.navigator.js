@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   TabNavigator,
-  TabBarBottom
 } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 

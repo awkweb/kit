@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Dimensions,
   ListView,
+  Modal,
   StatusBar,
   Text,
   View,
@@ -12,14 +13,23 @@ import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Colors from '../constants/colors';
 import Sizes from '../constants/sizes';
+import { getImageUri } from '../utils';
 import HomeHeader from '../components/home-header';
 import CollectionListItem from '../components/list-items/collection-list-item';
+import ImagePreviewModal from '../components/image-preview-modal';
 
 const {height} = Dimensions.get('window');
 const collectionListHeight = height - Sizes.headerBarHeight - Sizes.tabBarHeight;
 
 @inject('homeStore') @observer
 export default class HomeScreen extends React.Component {
+  constructor (props) {
+    super(props)
+    this.state = {
+      productPreview: null,
+    }
+  }
+
   componentDidMount () {
     this.props.homeStore.getCollections()
   }
@@ -33,6 +43,7 @@ export default class HomeScreen extends React.Component {
         />
         {this._renderHomeHeader()}
         {this._renderListView()}
+        {this.state.productPreview ? this._renderImagePreviewModal() : null}
       </View>
     );
   }
@@ -77,9 +88,22 @@ export default class HomeScreen extends React.Component {
         recommendations={rowData.recommendations}
         topics={rowData.topics}
         user={rowData.owner}
-        handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
-        handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
-        handleTopicPress={this._handleCollectionListItemTopicPress.bind(this)}
+        handleProductPress={this._handleProductPress.bind(this)}
+        handleTitlePress={this._handleTitlePress.bind(this)}
+        handleUserPress={this._handleUserPress.bind(this)}
+        handleTopicPress={this._handleTopicPress.bind(this)}
+        handleProductLongPress={this._handleProductLongPress.bind(this)}
+        handleProductPressOut={this._handleProductPressOut.bind(this)}
+      />
+    )
+  }
+
+  _renderImagePreviewModal = () => {
+    const imageUri = getImageUri(this.state.productPreview.media.url)
+    return (
+      <ImagePreviewModal
+        title={this.state.productPreview.name}
+        imageUri={imageUri}
       />
     )
   }
@@ -89,16 +113,28 @@ export default class HomeScreen extends React.Component {
     this.props.homeStore.getCollections()
   }
 
-  _handleCollectionListItemTitlePress (collection) {
+  _handleProductPress (collection, index) {
+    this.props.navigation.navigate('CollectionDetails', {collection: collection, index: index})
+  }
+
+  _handleTitlePress (collection) {
     this.props.navigation.navigate('CollectionDetails', {collection: collection})
   }
 
-  _handleCollectionListItemUserPress (user) {
+  _handleUserPress (user) {
     this.props.navigation.navigate('UserDetails', {user: user})
   }
 
-  _handleCollectionListItemTopicPress (topic) {
+  _handleTopicPress (topic) {
     this.props.navigation.navigate('TopicDetails', {topic: topic})
+  }
+
+  _handleProductLongPress = (product) => {
+    this.setState({productPreview: product})
+  }
+
+  _handleProductPressOut = () => {
+    this.setState({productPreview: null})
   }
 }
 

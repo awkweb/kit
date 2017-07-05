@@ -96,7 +96,6 @@ const styles = EStyleSheet.create({
     backgroundColor: Colors.whiteColor,
     borderTopColor: Colors.borderColor,
     borderTopWidth: EStyleSheet.hairlineWidth,
-    marginBottom: 10,
   },
   recommendationListItemContainer: {
     flexDirection: 'row',

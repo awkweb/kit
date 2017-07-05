@@ -1,5 +1,11 @@
+const headerBarHeight = 64;
+
 export default {
-  headerBarHeight: 64,
+	collectionDetailsHeaderMaxHeight: 250,
+	collectionDetailsHeaderMinHeight: headerBarHeight,
+  headerBarHeight,
   searchTypeContainerHeight: 42,
   tabBarHeight: 49,
+ 	userDetailsHeaderMaxHeight: 285,
+	userDetailsHeaderMinHeight: headerBarHeight
 };

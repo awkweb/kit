@@ -29,8 +29,8 @@ import UserAvatar from '../components/user-avatar';
 import ExpertBadge from '../components/expert-badge';
 import EmptyState from '../components/empty-state';
 
-const HEADER_MAX_HEIGHT = 285;
-const HEADER_MIN_HEIGHT = Sizes.headerBarHeight;
+const HEADER_MAX_HEIGHT = Sizes.userDetailsHeaderMaxHeight;
+const HEADER_MIN_HEIGHT = Sizes.userDetailsHeaderMinHeight;
 
 @observer
 export default class CollectionDetails extends React.Component {
@@ -166,22 +166,27 @@ export default class CollectionDetails extends React.Component {
         recommendations={rowData.recommendations}
         topics={rowData.topics}
         user={rowData.owner}
-        handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
-        handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
-        handleTopicPress={this._handleCollectionListItemTopicPress.bind(this)}
+        handleProductPress={this._handleProductPress.bind(this)}
+        handleTitlePress={this._handleTitlePress.bind(this)}
+        handleUserPress={this._handleUserPress.bind(this)}
+        handleTopicPress={this._handleTopicPress.bind(this)}
       />
     )
   }
 
-  _handleCollectionListItemTitlePress (collection) {
+  _handleProductPress (collection, index) {
+    this.props.navigation.navigate('CollectionDetails', {collection: collection, index: index})
+  }
+
+  _handleTitlePress (collection) {
     this.props.navigation.navigate('CollectionDetails', {collection: collection})
   }
 
-  _handleCollectionListItemUserPress (user) {
+  _handleUserPress (user) {
     this.props.navigation.navigate('UserDetails', {user: user})
   }
 
-  _handleCollectionListItemTopicPress (topic) {
+  _handleTopicPress (topic) {
     this.props.navigation.navigate('TopicDetails', {topic: topic})
   }
 

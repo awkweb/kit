@@ -19,8 +19,8 @@ import { getImageUri } from '../utils';
 import RecommendationList from '../components/recommendation-list';
 import UserAvatar from '../components/user-avatar';
 
-const HEADER_MAX_HEIGHT = 250;
-const HEADER_MIN_HEIGHT = Sizes.headerBarHeight;
+const HEADER_MAX_HEIGHT = Sizes.collectionDetailsHeaderMaxHeight;
+const HEADER_MIN_HEIGHT = Sizes.collectionDetailsHeaderMinHeight;
 
 export default class CollectionDetails extends React.Component {
   constructor (props) {
@@ -43,9 +43,11 @@ export default class CollectionDetails extends React.Component {
     }
   }
 
-  render() {
+  render () {
     return (
-      <View style={styles.container}> 
+      <View
+        style={styles.container}
+      >
         <StatusBar
           barStyle="light-content"
           animated={true}
@@ -60,6 +62,7 @@ export default class CollectionDetails extends React.Component {
           renderHeader={() => this._renderHeader()}
           renderFixedForeground={() => this._renderFixedForeground()}
           renderForeground={() => this._renderForeground()}
+          ref={(listView) => this.headerImageScrollView = listView}
         >
           <View>
             <TriggeringView
@@ -70,7 +73,9 @@ export default class CollectionDetails extends React.Component {
                 dataSource={this.state.dataSource}
                 user={this.state.user}
                 description={this.state.description}
+                scrollToIndex={this.props.navigation.state.params.index}
                 topics={this.state.topics}
+                handleTopicPress={this._handleTopicPress.bind(this)}
               />
             </TriggeringView>
           </View>
@@ -99,6 +104,10 @@ export default class CollectionDetails extends React.Component {
 
   _handleUserPress = () => {
     this.props.navigation.navigate('UserDetails', {user: this.state.user})
+  }
+
+  _handleTopicPress (topic) {
+    this.props.navigation.navigate('TopicDetails', {topic: topic})
   }
 
   _renderHeader () {

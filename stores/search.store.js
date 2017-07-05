@@ -46,6 +46,7 @@ export default class SearchStore {
 
   @action searchCollections = (query) => {
     this.loading = true
+    this.activeSearchType = 'kits'
     axios.all([api.searchUsers(query), api.searchCollections(query)])
       .then(axios.spread((userRes, collectionRes) => {
         const users = userRes.data.hits.hits

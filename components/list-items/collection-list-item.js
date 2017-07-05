@@ -16,7 +16,7 @@ import { getImageUri } from '../../utils';
 import UserAvatar from '../user-avatar';
 import ExpertBadge from '../expert-badge';
 
-const MIN_GRID_CELLS = 6;
+const MAX_GRID_CELLS = 6;
 const {width} = Dimensions.get('window');
 const recommendationImageSize = (width / 3) - 40.5;
 
@@ -24,23 +24,23 @@ export default class CollectionListItem extends React.Component {
   constructor (props) {
     super(props)
     const recommendationCount = props.recommendations.length
-    const gridCellCount = Math.min(recommendationCount, MIN_GRID_CELLS)
-    const recommendations = props.recommendations.slice(0, gridCellCount)
+    const gridCellCount = Math.min(recommendationCount, MAX_GRID_CELLS)
+    const initialRecommendations = props.recommendations.slice(0, gridCellCount)
     const dataSource = new ListView.DataSource({
       rowHasChanged: (r1, r2) => r1 !== r2
     })
     this.state = {
       recommendations: props.recommendations,
-      dataSource: dataSource.cloneWithRows(recommendations),
+      dataSource: dataSource.cloneWithRows(initialRecommendations),
       recommendationCount: recommendationCount,
-      gridCellCount: gridCellCount
+      gridCellCount: gridCellCount,
     }
   }
 
   componentWillReceiveProps (nextProps) {
     if (this.state.recommendations != nextProps.recommendations) {
       const recommendationCount = nextProps.recommendations.length
-      const gridCellCount = Math.min(recommendationCount, MIN_GRID_CELLS)
+      const gridCellCount = Math.min(recommendationCount, MAX_GRID_CELLS)
       const recommendations = nextProps.recommendations.slice(0, gridCellCount)
       const dataSource = new ListView.DataSource({
         rowHasChanged: (r1, r2) => r1 !== r2
@@ -80,6 +80,7 @@ export default class CollectionListItem extends React.Component {
           dataSource={this.state.dataSource}
           enableEmptySections={true}
           horizontal={true}
+          initialListSize={3}
           showsHorizontalScrollIndicator={false}
           pagingEnabled={true}
           style={styles.recommendationGrid}
@@ -124,8 +125,10 @@ export default class CollectionListItem extends React.Component {
     const index = parseInt(rowID) + 1
     return (
       <TouchableOpacity
-        activeOpacity={.75}
-        onPress={() => this._handleTitlePress()}
+        activeOpacity={.85}
+        onPress={() => this._handleRowPress(index)}
+        onLongPress={() => this._handleRowLongPress(index)}
+        onPressOut={() => this._handleRowPressOut()}
       >
         <View
           style={[styles.recommendation, {borderLeftWidth: index == 1 ? EStyleSheet.hairlineWidth : 0}]}
@@ -138,10 +141,36 @@ export default class CollectionListItem extends React.Component {
               source={{uri: imageUri}}
             />
           </FadeIn>
-          { index == this.state.gridCellCount && this.state.recommendationCount > MIN_GRID_CELLS ? this._renderCellNumber() : null }
+          { index == this.state.gridCellCount && this.state.recommendationCount > MAX_GRID_CELLS ? this._renderCellNumber() : null }
         </View>
       </TouchableOpacity>
     )
+  }
+
+  _handleRowPress = (index) => {
+    if (index == this.state.gridCellCount && this.state.recommendationCount > MAX_GRID_CELLS) {
+      let recommendations = this.props.recommendations.slice()
+      let recommendationToUpdate = {
+        ...recommendations[MAX_GRID_CELLS - 1],
+      }
+      recommendations.splice(MAX_GRID_CELLS - 1, 1, recommendationToUpdate)
+      const dataSource = this.state.dataSource.cloneWithRows(recommendations)
+      this.setState({
+        dataSource: dataSource,
+        gridCellCount: this.state.recommendationCount + 1,
+      })
+    } else {
+      this.props.handleProductPress(this.props.collection, index)
+    }
+  }
+
+  _handleRowLongPress = (index) => {
+    const product = this.props.recommendations[index - 1]
+    this.props.handleProductLongPress(product)
+  }
+
+  _handleRowPressOut = () => {
+    this.props.handleProductPressOut()  
   }
 
   _renderTopics = () => {

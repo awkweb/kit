@@ -68,18 +68,22 @@ export default class UserStore {
                     this.loading = false
                   })
                   .catch(err4 => {
+                    alert(err4)
                     this.loading = false
                   })
               })
               .catch(err3 => {
+                alert(err3)
                 this.loading = false
               })
           })
           .catch(err2 => {
+            alert(err2)
             this.loading = false
           })
         })
       .catch(err => {
+        console.log(err)
         this.loading = false
       })     
   }

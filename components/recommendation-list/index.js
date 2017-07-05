@@ -8,6 +8,7 @@ import {
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import Colors from '../../constants/colors';
+import Sizes from '../../constants/sizes';
 import RecommendationListItem from './recommendation-list-item';
 
 export default class RecommendationList extends React.Component {
@@ -20,6 +21,7 @@ export default class RecommendationList extends React.Component {
         removeClippedSubviews={false}
         renderHeader={this._renderHeader}
         renderRow={this._renderRow}
+        ref={(listView) => this.listView = listView}
         style={styles.recommendationList}
       />
     );
@@ -65,6 +67,7 @@ export default class RecommendationList extends React.Component {
           <TouchableOpacity
             key={topic.id}
             activeOpacity={.85}
+            onPress={() => this._handleTopicPress(topic)}
             style={styles.collectionTopic}
           >
             <Text style={styles.collectionTopicText}>#{topic.name}</Text>
@@ -73,11 +76,16 @@ export default class RecommendationList extends React.Component {
       </View>
     )
   }
+
+  _handleTopicPress = (topic) => {
+    this.props.handleTopicPress(topic)
+  }
 }
 
 const styles = EStyleSheet.create({
   recommendationList: {
     backgroundColor: Colors.whiteColor,
+    flex: 1,
     width: '100%',
   },
   recommendationListHeader: {

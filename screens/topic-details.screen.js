@@ -88,6 +88,7 @@ export default class TopicDetailsScreen extends React.Component {
           dataSource={this.state.topicStore.collectionsDataSource}
           enableEmptySections={true}
           initialListSize={3}
+          removeClippedSubviews={false}
           ref={(listView) => this.listView = listView}
           renderHeader={this._renderHeader}
           renderRow={this._renderRow}
@@ -122,22 +123,27 @@ export default class TopicDetailsScreen extends React.Component {
         recommendations={rowData.recommendations}
         topics={rowData.topics}
         user={rowData.owner}
-        handleTitlePress={this._handleCollectionListItemTitlePress.bind(this)}
-        handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
-        handleTopicPress={this._handleCollectionListItemTopicPress.bind(this)}
+        handleProductPress={this._handleProductPress.bind(this)}
+        handleTitlePress={this._handleTitlePress.bind(this)}
+        handleUserPress={this._handleUserPress.bind(this)}
+        handleTopicPress={this._handleTopicPress.bind(this)}
       />
     )
   }
 
-  _handleCollectionListItemTitlePress (collection) {
+  _handleProductPress (collection, index) {
+    this.props.navigation.navigate('CollectionDetails', {collection: collection, index: index})
+  }
+
+  _handleTitlePress (collection) {
     this.props.navigation.navigate('CollectionDetails', {collection: collection})
   }
 
-  _handleCollectionListItemUserPress (user) {
+  _handleUserPress (user) {
     this.props.navigation.navigate('UserDetails', {user: user})
   }
 
-  _handleCollectionListItemTopicPress (topic) {
+  _handleTopicPress (topic) {
     this.props.navigation.navigate('TopicDetails', {topic: topic})
   }
 
