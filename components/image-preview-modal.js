@@ -3,6 +3,7 @@ import { Components } from 'expo';
 import {
   Dimensions,
   Image,
+  Modal,
   Text,
   View,
 } from 'react-native';
@@ -13,30 +14,45 @@ import Colors from '../constants/colors';
 
 const {BlurView} = Components;
 const {height, width} = Dimensions.get('window');
+const modalHeight = height / 1.75
+const modalWidth = width - 20
 
 export default class ImagePreviewModal extends React.Component {
   render () {
     const source = {uri: this.props.imageUri}
     return (
-      <BlurView
-        style={[styles.container, EStyleSheet.absoluteFill]}
-        intensity={75}
-        tint={"light"}
+      <Modal
+        transparent={true}
       >
-        <View
-          style={styles.modal}
+        <BlurView
+          style={[styles.container, EStyleSheet.absoluteFill]}
+          intensity={85}
+          tint={"light"}
         >
-          <Text>{this.props.title}</Text>
-          <FadeIn
-            placeholderStyle={styles.imageFadeIn}
+          <View
+            style={styles.modalBody}
           >
-            <Image
-              style={styles.image}
-              source={source}
-            />
-          </FadeIn>
-        </View>
-      </BlurView>
+            <View
+              style={styles.modalTitleContainer}
+            >
+              <Text
+                ellipsizeMode={"tail"}
+                numberOfLines={1}
+                style={styles.modalTitle}>
+                  {this.props.title}
+              </Text>
+            </View>
+            <FadeIn
+              placeholderStyle={styles.imageFadeIn}
+            >
+              <Image
+                style={styles.image}
+                source={source}
+              />
+            </FadeIn>
+          </View>
+        </BlurView>
+      </Modal>
     )
   }
 }
@@ -46,22 +62,36 @@ const styles = EStyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  modal: {
+  modalBody: {
     backgroundColor: Colors.whiteColor,
     borderRadius: 10,
-    height: height / 1.5,
-    width: width - 20,
+    paddingHorizontal: 10,
+    paddingVertical: 10,
+    height: modalHeight,
+    width: modalWidth,
+  },
+  modalTitleContainer: {
+    alignItems: 'flex-start',
+    height: 40,
+    justifyContent: 'center',
+  },
+  modalTitle: {
+    backgroundColor: 'transparent',
+    color: Colors.blackColor,
+    fontSize: 16,
+    fontWeight: '600',
   },
   imageFadeIn: {
     backgroundColor: Colors.whiteColor,
-    height: height / 1.5,
-    width: width - 20,
+    borderRadius: 10,
+    height: modalHeight - 60,
+    width: modalWidth - 20,
   },
   image: {
-    height: height / 1.5,
-    width: width - 20,
-    borderRadius: 4,
+    borderRadius: 10,
+    height: modalHeight - 60,
     resizeMode: 'contain',
+    width: modalWidth - 20,
   },
 });
 

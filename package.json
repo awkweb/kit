@@ -1,6 +1,6 @@
 {
   "name": "kit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "So kitted bro",
   "author": "Tom Meagher",
   "main": "node_modules/expo/AppEntry.js",

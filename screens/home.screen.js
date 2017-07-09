@@ -16,7 +16,6 @@ import Sizes from '../constants/sizes';
 import { getImageUri } from '../utils';
 import HomeHeader from '../components/home-header';
 import CollectionListItem from '../components/list-items/collection-list-item';
-import ImagePreviewModal from '../components/image-preview-modal';
 
 const {height} = Dimensions.get('window');
 const collectionListHeight = height - Sizes.headerBarHeight - Sizes.tabBarHeight;
@@ -39,11 +38,11 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
         <StatusBar
           barStyle="dark-content"
-          animated={true}
+          animated={false}
+          hidden={this.state.productPreview != null}
         />
         {this._renderHomeHeader()}
         {this._renderListView()}
-        {this.state.productPreview ? this._renderImagePreviewModal() : null}
       </View>
     );
   }
@@ -92,18 +91,6 @@ export default class HomeScreen extends React.Component {
         handleTitlePress={this._handleTitlePress.bind(this)}
         handleUserPress={this._handleUserPress.bind(this)}
         handleTopicPress={this._handleTopicPress.bind(this)}
-        handleProductLongPress={this._handleProductLongPress.bind(this)}
-        handleProductPressOut={this._handleProductPressOut.bind(this)}
-      />
-    )
-  }
-
-  _renderImagePreviewModal = () => {
-    const imageUri = getImageUri(this.state.productPreview.media.url)
-    return (
-      <ImagePreviewModal
-        title={this.state.productPreview.name}
-        imageUri={imageUri}
       />
     )
   }
@@ -127,14 +114,6 @@ export default class HomeScreen extends React.Component {
 
   _handleTopicPress (topic) {
     this.props.navigation.navigate('TopicDetails', {topic: topic})
-  }
-
-  _handleProductLongPress = (product) => {
-    this.setState({productPreview: product})
-  }
-
-  _handleProductPressOut = () => {
-    this.setState({productPreview: null})
   }
 }
 

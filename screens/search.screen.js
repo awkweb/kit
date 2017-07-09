@@ -123,7 +123,7 @@ export default class Search extends React.Component {
       markup = (
         <UserListItem
           user={rowData}
-          handleUserPress={this._handleCollectionListItemUserPress.bind(this)}
+          handleUserPress={this._handleUserPress.bind(this)}
         />
       )
     }

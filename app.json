@@ -5,7 +5,7 @@
     "slug": "kit",
     "privacy": "public",
     "sdkVersion": "18.0.0",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "orientation": "portrait",
     "primaryColor": "#fff",
     "icon": "./assets/icons/app-icon.png",

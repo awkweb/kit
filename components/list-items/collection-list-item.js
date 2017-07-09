@@ -3,6 +3,7 @@ import {
   Dimensions,
   ListView,
   Image,
+  StatusBar,
   Text,
   TouchableOpacity,
   View,
@@ -15,6 +16,7 @@ import Colors from '../../constants/colors';
 import { getImageUri } from '../../utils';
 import UserAvatar from '../user-avatar';
 import ExpertBadge from '../expert-badge';
+import ImagePreviewModal from '../image-preview-modal';
 
 const MAX_GRID_CELLS = 6;
 const {width} = Dimensions.get('window');
@@ -104,8 +106,20 @@ export default class CollectionListItem extends React.Component {
           </TouchableOpacity>
           {this.props.topics && this.props.topics.length > 0 ? this._renderTopics() : null}
         </View>
+
+        {this.state.productPreview ? this._renderImagePreviewModal() : null}
       </View>
     );
+  }
+
+  _renderImagePreviewModal = () => {
+    const imageUri = getImageUri(this.state.productPreview.media.url)
+    return (
+      <ImagePreviewModal
+        title={this.state.productPreview.name}
+        imageUri={imageUri}
+      />
+    )
   }
 
   _handleTitlePress = () => {
@@ -166,11 +180,13 @@ export default class CollectionListItem extends React.Component {
 
   _handleRowLongPress = (index) => {
     const product = this.props.recommendations[index - 1]
-    this.props.handleProductLongPress(product)
+    this.setState({productPreview: product})
+    StatusBar.setHidden(true)
   }
 
   _handleRowPressOut = () => {
-    this.props.handleProductPressOut()  
+    this.setState({productPreview: null})
+    StatusBar.setHidden(false)
   }
 
   _renderTopics = () => {
